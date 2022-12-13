@@ -46,7 +46,7 @@ google = oauth.register(
 
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:13886003474cjw@e61561.cwsqeuuovxq1.us-east-1.rds.amazonaws.com:3306/user"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
