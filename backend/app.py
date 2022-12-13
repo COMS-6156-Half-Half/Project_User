@@ -11,7 +11,7 @@ from flask_login import LoginManager
 from register import register
 from home import home
 from flask import render_template
-
+from logout import logout
 
 
 import sqlalchemy
@@ -57,7 +57,7 @@ app.app_context().push()
 app.register_blueprint(login)
 app.register_blueprint(register)
 app.register_blueprint(home)
-
+app.register_blueprint(logout)
 
 @app.route('/')
 @login_required
