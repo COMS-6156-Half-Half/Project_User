@@ -10,23 +10,24 @@ login_manager.init_app(login)
 @login.route('/login_account', methods=['GET', 'POST'])
 def show():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        data = request.get_json()
+        username = data['username']
+        password = data['password']
 
         user = Users.query.filter_by(username=username).first()
 
         if user:
             if check_password_hash(user.password, password):
                 login_user(user)
-                return redirect(url_for('home.show'))
+                return Response("Login Success", status=200, content_type="text/plain")
             else:
-                return redirect(url_for('login.show') + '?error=incorrect-password')
+                return Response("incorrect-password", status=404, content_type="text/plain")
 
         else:
-            return redirect(url_for('login.show') + '?error=user-not-found')
+            return Response("user-not-found", status=404, content_type="text/plain")
 
     else:
-        return render_template('login.html')
+        return Response("method should be Post", status=404, content_type="text/plain")
 
 
 

@@ -1,5 +1,5 @@
 # AS simeple as possbile flask google oAuth 2.0
-from flask import Flask, redirect, url_for, session
+from flask import Flask, redirect, url_for, session, Response, request
 from authlib.integrations.flask_client import OAuth
 import os
 from datetime import timedelta
@@ -12,7 +12,8 @@ from register import register
 from home import home
 from flask import render_template
 from logout import logout
-
+from current_user import current_user
+import json
 
 import sqlalchemy
 # dotenv setup
@@ -58,6 +59,7 @@ app.register_blueprint(login)
 app.register_blueprint(register)
 app.register_blueprint(home)
 app.register_blueprint(logout)
+app.register_blueprint(current_user)
 
 @app.route('/')
 @login_required
@@ -65,9 +67,16 @@ def hello_world():
     email = dict(session)['profile']['email']
     return render_template('hello_google.html')
 
+@app.route('/load_user')
 @login_manager.user_loader
 def load_user(user_id):
-    return Users.query.get(int(user_id))
+    data = request.get_json()
+    user_id = data['user_id']
+    user = Users.query.get(int(user_id))
+    if not user:
+        return Response("uses not found", status=404, content_type="text/plain")
+
+    return Response(json.dumps(user), status=200, content_type="application.json")
 
 @app.route('/login')
 def login():
