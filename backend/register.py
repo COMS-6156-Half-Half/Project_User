@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, render_template, redirect, request
+from flask import Blueprint, url_for, render_template, redirect, request, Response
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash
 import sqlalchemy
@@ -11,10 +11,11 @@ login_manager.init_app(register)
 @register.route('/register', methods=['GET', 'POST'])
 def show():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form['confirm-password']
+        data = request.get_json()
+        username = data['username']
+        email = data['email']
+        password = data['password']
+        confirm_password = data['confirm-password']
 
         if username and email and password and confirm_password:
             if password == confirm_password:
@@ -30,10 +31,10 @@ def show():
                     db.session.add(new_user)
                     db.session.commit()
                 except sqlalchemy.exc.IntegrityError:
-                    return redirect(url_for('register.show') + '?error=user-or-email-exists')
+                    return Response("User-or-email-exists", status=404, content_type="text/plain")
 
-                return redirect(url_for('login.show') + '?success=account-created')
+                return Response("Account-Created", status=200, content_type="text/plain")
         else:
-            return redirect(url_for('register.show') + '?error=missing-fields')
+            return Response("Missing-fields", status=404, content_type="text/plain")
     else:
-        return render_template('register.html')
+        return Response("Method should be POST", status=404, content_type="text/plain")
