@@ -13,6 +13,8 @@ from home import home
 from flask import render_template
 from logout import logout
 from current_user import current_user
+from find_user import find_user
+
 import json
 
 import sqlalchemy
@@ -60,6 +62,7 @@ app.register_blueprint(register)
 app.register_blueprint(home)
 app.register_blueprint(logout)
 app.register_blueprint(current_user)
+app.register_blueprint(find_user)
 
 @app.route('/')
 @login_required
