@@ -17,6 +17,8 @@ from find_user import find_user
 from sns_middleware import sns_middleware
 import json
 
+from flask_cors import CORS
+
 import sqlalchemy
 # dotenv setup
 # from dotenv import load_dotenv
@@ -25,6 +27,7 @@ import sqlalchemy
 
 # App config
 app = Flask(__name__)
+CORS(app)
 # Session config
 app.secret_key = '12345678'
 app.config['SESSION_COOKIE_NAME'] = 'google-login-session'
