@@ -13,7 +13,9 @@ def index():
         username = data['username']
         user = Users.query.filter_by(username=username).first()
         if user:
-            r = {'userid': str(user.id)}
+            r = {'userid': str(user.id),
+                'user_email': str(user.email)}
+
             print(r)
             return Response(json.dumps(r), status=200, content_type="application.json")
 
