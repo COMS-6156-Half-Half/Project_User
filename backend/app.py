@@ -14,7 +14,7 @@ from flask import render_template
 from logout import logout
 from current_user import current_user
 from find_user import find_user
-
+from sns_middleware import sns_middleware
 import json
 
 import sqlalchemy
@@ -63,6 +63,19 @@ app.register_blueprint(home)
 app.register_blueprint(logout)
 app.register_blueprint(current_user)
 app.register_blueprint(find_user)
+
+
+@app.after_request
+def after_request_callback(response):
+    method = request.method
+    path = request.path
+    if path == '/register' and method == 'POST':
+        sns = sns_middleware()
+        sns.register_notification(request, response)
+
+    return response
+
+
 
 @app.route('/')
 @login_required
