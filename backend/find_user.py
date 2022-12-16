@@ -14,7 +14,8 @@ def index():
     id = int(data['id'])
     user = Users.query.filter_by(id=id).first()
     if user:
-        return Response("User exist", status=200, content_type="text/plain")
+        r = {'user_email': str(user.email)}
+        return Response(json.dumps(r), status=200, content_type="application.json")
 
     else:
         return Response("User not found", status=404, content_type="text/plain")
