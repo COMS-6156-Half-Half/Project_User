@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from werkzeug.security import generate_password_hash
 import sqlalchemy
 from models import db, Users
+import boto3
 
 register = Blueprint('register', __name__, template_folder='../frontend')
 login_manager = LoginManager()
@@ -32,6 +33,7 @@ def show():
                     db.session.commit()
                 except sqlalchemy.exc.IntegrityError:
                     return Response("User-or-email-exists", status=404, content_type="text/plain")
+
 
                 return Response("Account-Created", status=200, content_type="text/plain")
         else:
